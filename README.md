@@ -1,4 +1,4 @@
-# Docker DNS Discovery
+# (WIP) Docker DNS Discovery
 
 [![Build Status](https://travis-ci.org/johnthepink/docker-dns-discovery.svg?branch=master)](https://travis-ci.org/johnthepink/docker-dns-discovery)
 
