@@ -2,6 +2,7 @@
   "parser": "babel-eslint",
   "extends": "airbnb-base",
   "rules": {
-    "quotes": [2, "double"]
+    "quotes": [2, "double"],
+    "no-console": 0
   }
 }

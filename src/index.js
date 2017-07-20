@@ -1,4 +1,5 @@
 import { createServer, SRVRecord } from "mname";
+import Docker from "dockerode";
 import { TLD } from "./settings";
 
 const server = createServer();
@@ -20,4 +21,25 @@ server.on("query", (query, done) => {
   query.addAnswer(domain, target);
   query.respond();
   done();
+});
+
+const docker = new Docker({ socketPath: "/var/run/docker.sock" });
+docker.getEvents({}, (err, data) => {
+  if (err) {
+    console.log(err.message);
+    return;
+  }
+  data.on("data", (chunk) => {
+    const event = JSON.parse(chunk.toString("UTF-8"));
+    if (event.Action === "start") {
+      console.log(`Starting ${event.Actor.Attributes.name}`);
+      const container = docker.getContainer(event.id);
+      container.inspect((err, data) => {
+        console.log(data.NetworkSettings.Ports);
+      });
+    }
+    if (event.Action === "die") {
+      console.log(`Stopping ${event.Actor.Attributes.name}`);
+    }
+  });
 });
