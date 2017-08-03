@@ -1,5 +1,6 @@
 import { createServer, SRVRecord } from "mname";
-import Docker from "dockerode";
+import docker from "./docker";
+import { addContainer } from "./container";
 import { TLD } from "./settings";
 
 const server = createServer();
@@ -23,7 +24,6 @@ server.on("query", (query, done) => {
   done();
 });
 
-const docker = new Docker({ socketPath: "/var/run/docker.sock" });
 docker.getEvents({}, (err, data) => {
   if (err) {
     console.log(err.message);
@@ -33,10 +33,7 @@ docker.getEvents({}, (err, data) => {
     const event = JSON.parse(chunk.toString("UTF-8"));
     if (event.Action === "start") {
       console.log(`Starting ${event.Actor.Attributes.name}`);
-      const container = docker.getContainer(event.id);
-      container.inspect((err, data) => {
-        console.log(data.NetworkSettings.Ports);
-      });
+      addContainer(event.id);
     }
     if (event.Action === "die") {
       console.log(`Stopping ${event.Actor.Attributes.name}`);

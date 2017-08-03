@@ -3,6 +3,7 @@
   "extends": "airbnb-base",
   "rules": {
     "quotes": [2, "double"],
-    "no-console": 0
+    "no-console": 0,
+    "import/prefer-default-export": 0
   }
 }
