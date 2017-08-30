@@ -1,4 +1,5 @@
 import docker from "./docker";
+import store from "./store";
 
 const addContainer = (id) => {
   const container = docker.getContainer(id);
@@ -12,7 +13,8 @@ const addContainer = (id) => {
       }
       return null;
     });
-    console.log(publicPorts);
+    store.setPorts(publicPorts);
+    console.log(store.getPorts());
   });
 };
 
