@@ -1,6 +1,6 @@
 import { createServer, SRVRecord } from "mname";
 import docker from "./docker";
-import { addContainer } from "./container";
+import { processContainers } from "./container";
 import { TLD } from "./settings";
 
 const server = createServer();
@@ -30,13 +30,9 @@ docker.getEvents({}, (err, data) => {
     return;
   }
   data.on("data", (chunk) => {
-    const event = JSON.parse(chunk.toString("UTF-8"));
-    if (event.Action === "start") {
-      console.log(`Starting ${event.Actor.Attributes.name}`);
-      addContainer(event.id);
-    }
-    if (event.Action === "die") {
-      console.log(`Stopping ${event.Actor.Attributes.name}`);
+    const { Action: action } = JSON.parse(chunk.toString("UTF-8"));
+    if (["start", "stop"].includes(action)) {
+      processContainers(action);
     }
   });
 });
