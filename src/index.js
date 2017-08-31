@@ -1,9 +1,10 @@
 import { createServer, SRVRecord } from "mname";
 import docker from "./docker";
-import { processContainers } from "./container";
+import ContainerProcessor from "./containerProcessor";
 import { TLD } from "./settings";
 
 const server = createServer();
+const containerProcessor = new ContainerProcessor();
 
 server.listenUdp({ port: 9999, address: "127.0.0.1" }, () => {
   console.log("DNS server started on port 9999");
@@ -32,7 +33,7 @@ docker.getEvents({}, (err, data) => {
   data.on("data", (chunk) => {
     const { Action: action } = JSON.parse(chunk.toString("UTF-8"));
     if (["start", "stop"].includes(action)) {
-      processContainers(action);
+      containerProcessor.processContainers(action);
     }
   });
 });
