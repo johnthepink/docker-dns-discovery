@@ -1,4 +1,4 @@
-class Store {
+export default class Store {
 
   constructor() {
     this.ports = [];
@@ -12,5 +12,3 @@ class Store {
     this.ports = ports;
   };
 }
-
-export default new Store();

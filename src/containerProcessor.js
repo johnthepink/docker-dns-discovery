@@ -1,14 +1,21 @@
 import compact from "lodash.compact";
-import docker from "./docker";
-import store from "./store";
 
 export default class ContainerProcessor {
+
+  constructor({
+    client,
+    store,
+  }) {
+    this.client = client;
+    this.store = store;
+  }
+
   getHostname = async (container) => {
     const {
       Config: {
         Hostname: hostname,
       },
-    } = await docker.getContainer(container.Id).inspect();
+    } = await this.client.getContainer(container.Id).inspect();
     return hostname;
   };
 
@@ -39,11 +46,11 @@ export default class ContainerProcessor {
     return compact(nodes);
   };
 
-  processContainers = async (action) => {
+  process = async (action) => {
     console.log(`processing ${action}`);
-    const containers = await docker.listContainers();
+    const containers = await this.client.listContainers();
     const ports = await this.getNodes(containers);
-    store.setPorts(ports);
-    console.log(store.getPorts());
+    this.store.setPorts(ports);
+    console.log(this.store.getPorts());
   };
 }

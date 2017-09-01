@@ -1,7 +1,38 @@
-import Docker from "dockerode";
+import DockerClient from "dockerode";
+import ContainerProcessor from "./containerProcessor";
 
-const docker = new Docker({
-  socketPath: "/var/run/docker.sock",
-});
+export default class Docker {
 
-export default docker;
+  constructor({ store }) {
+    this.store = store;
+    this.client = this.initializeDockerClient();
+    this.containerProcessor = new ContainerProcessor({
+      client: this.client,
+      store,
+    });
+    this.listenForDockerEvents(
+      this.containerProcessor.process,
+    );
+  }
+
+  initializeDockerClient = () => (
+    new DockerClient({
+      socketPath: "/var/run/docker.sock",
+    })
+  );
+
+  listenForDockerEvents = (process) => {
+    this.client.getEvents({}, (err, data) => {
+      if (err) {
+        console.log(err.message);
+        return;
+      }
+      data.on("data", (chunk) => {
+        const { Action: action } = JSON.parse(chunk.toString("UTF-8"));
+        if (["start", "stop"].includes(action)) {
+          process(action);
+        }
+      });
+    });
+  }
+}
