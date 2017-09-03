@@ -22,7 +22,7 @@ export default class Store {
     this.ports = ports
   );
 
-  getRecordFor = (hostname: string): Port | null => (
+  getRecordFor = (hostname: string): Port | void => (
     find(this.ports, { hostname })
   );
 }
