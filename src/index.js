@@ -1,10 +1,10 @@
 /* eslint-disable */
+// @flow
 
 import Store from "./store";
 import Docker from "./docker";
 import DNSServer from "./dnsServer";
 import { TLD } from "./settings";
-
 
 const store = new Store();
 const docker = new Docker({

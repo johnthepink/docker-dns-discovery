@@ -1,7 +1,11 @@
+// @flow
+
 import dotenv from "dotenv";
 
 dotenv.config({ silent: true });
 
-export const {
+const TLD = process.env.TLD || "";
+
+export {
   TLD,
-} = process.env;
+};

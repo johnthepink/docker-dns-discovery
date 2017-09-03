@@ -1,14 +1,24 @@
+// @flow
+
 import {
   createServer,
   SRVRecord,
 } from "mname";
 
 export default class DNSServer {
+  getRecordFor: Function;
+  server: any;
+  store: any;
+  TLD: string;
 
   constructor({
     getRecordFor,
     store,
     TLD,
+  }: {
+    getRecordFor: Function,
+    store: any,
+    TLD: string,
   }) {
     this.getRecordFor = getRecordFor;
     this.server = this.initializeServer();

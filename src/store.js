@@ -1,20 +1,28 @@
+// @flow
+
 import find from "lodash.find";
 
+type Port = {
+  hostname: string;
+  publicPort: number;
+};
+
 export default class Store {
+  ports: Array<Port>;
 
   constructor() {
     this.ports = [];
   }
 
-  getPorts = () => (
+  getPorts = (): Array<Port> => (
     this.ports
   );
 
-  setPorts = ports => (
+  setPorts = (ports: Array<Port>): Array<Port> => (
     this.ports = ports
   );
 
-  getRecordFor = hostname => (
+  getRecordFor = (hostname: string): Port | null => (
     find(this.ports, { hostname })
   );
 }

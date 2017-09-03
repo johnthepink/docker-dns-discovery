@@ -1,11 +1,19 @@
+// @flow
+
 import DockerClient from "dockerode";
 import ContainerProcessor from "./containerProcessor";
 
 export default class Docker {
+  store: any;
+  client: any;
+  containerProcessor: any;
 
   constructor({
     store,
     TLD,
+  }: {
+    store: mixed,
+    TLD: string,
   }) {
     this.store = store;
     this.client = this.initializeDockerClient();
@@ -25,7 +33,7 @@ export default class Docker {
     })
   );
 
-  listenForDockerEvents = (process) => {
+  listenForDockerEvents = (process: Function) => {
     this.client.getEvents({}, (err, data) => {
       if (err) {
         console.log(err.message);
