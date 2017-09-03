@@ -5,9 +5,11 @@ export default class ContainerProcessor {
   constructor({
     client,
     store,
+    TLD,
   }) {
     this.client = client;
     this.store = store;
+    this.TLD = TLD;
   }
 
   getHostname = async (container) => {
@@ -16,7 +18,7 @@ export default class ContainerProcessor {
         Hostname: hostname,
       },
     } = await this.client.getContainer(container.Id).inspect();
-    return hostname;
+    return `${hostname}.${this.TLD}`;
   };
 
   getPublicPort = (container) => {
@@ -51,6 +53,5 @@ export default class ContainerProcessor {
     const containers = await this.client.listContainers();
     const ports = await this.getNodes(containers);
     this.store.setPorts(ports);
-    console.log(this.store.getPorts());
   };
 }

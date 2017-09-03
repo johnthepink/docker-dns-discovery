@@ -3,13 +3,17 @@ import {
   SRVRecord,
 } from "mname";
 
-import { TLD } from "./settings";
-
 export default class DNSServer {
 
-  constructor({ store }) {
+  constructor({
+    getRecordFor,
+    store,
+    TLD,
+  }) {
+    this.getRecordFor = getRecordFor;
     this.server = this.initializeServer();
     this.store = store;
+    this.TLD = TLD;
   }
 
   initializeServer = () => {
@@ -28,8 +32,11 @@ export default class DNSServer {
       }
       const domain = query.name();
       console.log(`DNS ${type} Query: ${domain}`);
-      const target = new SRVRecord(TLD, 3434);
-      query.addAnswer(domain, target);
+      const result = this.getRecordFor(domain);
+      if (result) {
+        const target = new SRVRecord(this.TLD, result.publicPort);
+        query.addAnswer(result.hostname, target);
+      }
       query.respond();
       done();
     });

@@ -1,3 +1,5 @@
+import find from "lodash.find";
+
 export default class Store {
 
   constructor() {
@@ -8,7 +10,11 @@ export default class Store {
     this.ports
   );
 
-  setPorts = (ports) => {
-    this.ports = ports;
-  };
+  setPorts = ports => (
+    this.ports = ports
+  );
+
+  getRecordFor = hostname => (
+    find(this.ports, { hostname })
+  );
 }

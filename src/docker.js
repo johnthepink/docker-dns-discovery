@@ -3,12 +3,16 @@ import ContainerProcessor from "./containerProcessor";
 
 export default class Docker {
 
-  constructor({ store }) {
+  constructor({
+    store,
+    TLD,
+  }) {
     this.store = store;
     this.client = this.initializeDockerClient();
     this.containerProcessor = new ContainerProcessor({
       client: this.client,
       store,
+      TLD,
     });
     this.listenForDockerEvents(
       this.containerProcessor.process,
