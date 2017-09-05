@@ -2,7 +2,7 @@
 
 import dotenv from "dotenv";
 
-dotenv.config({ silent: true });
+dotenv.config();
 
 const TLD = process.env.TLD || "";
 
