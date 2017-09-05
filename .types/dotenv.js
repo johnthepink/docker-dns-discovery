@@ -9,5 +9,6 @@ declare module "dotenv" {
     config(options: ?configOptions): any,
     load(options: ?configOptions): any,
   }
+
   declare var exports: Dotenv;
 }
